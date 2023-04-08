@@ -26,7 +26,7 @@
 
   <meta name="description" content="Transient Execution CPU Out-of-Order  现代 CPU 在执行指令时可以乱序执行以增加执行效率，其意义在于： 现代 CPU 都采用流水线模式，这就会出现  数据冒险，其造成了指令间的依赖关系。如 12mov %rax, 0(%rbx)add %rax, %rcx 其中在执行 add %rax, %rcx 时 %rax 的值依赖于前一条 mov">
 <meta property="og:type" content="article">
-<meta property="og:title" content="寄尘&#39;s Blog">
+<meta property="og:title" content="Transient Execution">
 <meta property="og:url" content="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.8%20Transient%20Execution/index.html">
 <meta property="og:site_name" content="寄尘&#39;s Blog">
 <meta property="og:description" content="Transient Execution CPU Out-of-Order  现代 CPU 在执行指令时可以乱序执行以增加执行效率，其意义在于： 现代 CPU 都采用流水线模式，这就会出现  数据冒险，其造成了指令间的依赖关系。如 12mov %rax, 0(%rbx)add %rax, %rcx 其中在执行 add %rax, %rcx 时 %rax 的值依赖于前一条 mov">
@@ -41,7 +41,7 @@
 <meta property="og:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/image-20221122100827067.png">
 <meta property="og:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/741401-20220928192356218-1753396915.png">
 <meta property="article:published_time" content="2023-04-08T15:31:20.533Z">
-<meta property="article:modified_time" content="2023-02-21T14:35:37.215Z">
+<meta property="article:modified_time" content="2023-04-08T15:42:57.606Z">
 <meta property="article:author" content="自是水长东">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/image-20221121183641564.png">
@@ -59,7 +59,7 @@
   };
 </script>
 
-  <title> | 寄尘's Blog</title>
+  <title>Transient Execution | 寄尘's Blog</title>
   
 
 
@@ -228,7 +228,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          Transient Execution
         </h1>
 
         <div class="post-meta">
@@ -237,16 +237,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2023-04-08 23:31:20" itemprop="dateCreated datePublished" datetime="2023-04-08T23:31:20+08:00">2023-04-08</time>
+              <time title="创建时间：2023-04-08 23:31:20 / 修改时间：23:42:57" itemprop="dateCreated datePublished" datetime="2023-04-08T23:31:20+08:00">2023-04-08</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-21 22:35:37" itemprop="dateModified" datetime="2023-02-21T22:35:37+08:00">2023-02-21</time>
-              </span>
 
           
 
@@ -1098,7 +1092,7 @@ target="_blank" rel="noopener" href="https://www.cnblogs.com/fortunely/p/1673932
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.8%20Transient%20Execution/" title="">http://example.com/2023/04/08/信息系统安全/Chap.8 Transient Execution/</a>
+    <a href="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.8%20Transient%20Execution/" title="Transient Execution">http://example.com/2023/04/08/信息系统安全/Chap.8 Transient Execution/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1115,12 +1109,12 @@ target="_blank" rel="noopener" href="https://www.cnblogs.com/fortunely/p/1673932
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.7%20High%20Level%20Programming/" rel="prev" title="">
-      <i class="fa fa-chevron-left"></i> 
+    <a href="/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.7%20High%20Level%20Programming/" rel="prev" title="High Level Programming">
+      <i class="fa fa-chevron-left"></i> High Level Programming
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.9%20Denial%20of%20Service/" rel="next" title="">
-       <i class="fa fa-chevron-right"></i>
+    <a href="/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.9%20Denial%20of%20Service/" rel="next" title="Dinial of Service Attacks">
+      Dinial of Service Attacks <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>

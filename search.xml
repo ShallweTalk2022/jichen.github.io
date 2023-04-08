@@ -266,7 +266,7 @@ IBT 就是为了解决间接跳转的问题</p></li>
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>Code Analysis Basics</title>
     <url>/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.10%20Code%20Analysis%20Basics/</url>
     <content><![CDATA[<h1 id="code-analysis-basics">Code Analysis Basics</h1>
 <h2 id="code-analysis">Code Analysis</h2>
@@ -513,7 +513,7 @@ automatically.</p></li>
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>Heap Overflow</title>
     <url>/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.2%20Heap%20Overflow/</url>
     <content><![CDATA[<h1 id="heap-overflow">Heap Overflow</h1>
 <p><strong>Stack Overflow vs. Heap Overflow</strong></p>
@@ -818,7 +818,7 @@ unpredictable</p>
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>Input Problem</title>
     <url>/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.3.2%20Input%20Problem/</url>
     <content><![CDATA[<h1 id="input-problem">Input Problem</h1>
 <h2 id="insecure-input">Insecure Input</h2>
@@ -1023,7 +1023,7 @@ CONTENT="0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgndGVzdDMnKTwvc2NyaXB0Pg"
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>Sandboxing</title>
     <url>/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.5%20Sandboxing/</url>
     <content><![CDATA[<h1 id="sandboxing">Sandboxing</h1>
 <h2 id="compartmentalization">Compartmentalization</h2>
@@ -1400,7 +1400,7 @@ Secure Enclave_ios的可信执行环境是什么_长沙火山的博客-CSDN博�
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>High Level Programming</title>
     <url>/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.7%20High%20Level%20Programming/</url>
     <content><![CDATA[<h1 id="high-level-programming">High Level Programming</h1>
 <h2 id="motivation">Motivation</h2>
@@ -1998,7 +1998,7 @@ socket 进行收发包的操作</p>
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>Race Condition</title>
     <url>/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.3.1%20Race%20Conditions/</url>
     <content><![CDATA[<h1 id="race-condition">Race Condition</h1>
 <p><strong>数字电路中的竞争与冒险</strong></p>
@@ -2300,7 +2300,7 @@ setuid 类似，即赋予文件所在组的权限）</p>
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>Transient Execution</title>
     <url>/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.8%20Transient%20Execution/</url>
     <content><![CDATA[<h1 id="transient-execution">Transient Execution</h1>
 <h2 id="cpu">CPU</h2>
@@ -3129,7 +3129,7 @@ href="https://www.cnblogs.com/fortunely/p/16739327.html#c内存顺序memory_orde
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>Dinial of Service Attacks</title>
     <url>/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.9%20Denial%20of%20Service/</url>
     <content><![CDATA[<h1 id="dinial-of-service-attacks">Dinial of Service Attacks</h1>
 <h2 id="dos-attacks">DoS Attacks</h2>
