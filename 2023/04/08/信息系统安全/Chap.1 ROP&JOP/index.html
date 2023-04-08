@@ -26,7 +26,7 @@
 
   <meta name="description" content="ROP &amp; JOP x86 架构复习 1、寄存器   寄存器：  ABCD：Accumulator 累加器，Base 基地址，Counter 计数器，Data 数据 SI，DI：Src，Dst 其中 memcpy(des, src) 函数的两个地址参数就专门存储在 DI，SI  在 \(8086\) 时代，Intel 对以上寄存器根据其各自功能进行相应的优化，直">
 <meta property="og:type" content="article">
-<meta property="og:title" content="寄尘&#39;s Blog">
+<meta property="og:title" content="ROP &amp; JOP">
 <meta property="og:url" content="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.1%20ROP&JOP/index.html">
 <meta property="og:site_name" content="寄尘&#39;s Blog">
 <meta property="og:description" content="ROP &amp; JOP x86 架构复习 1、寄存器   寄存器：  ABCD：Accumulator 累加器，Base 基地址，Counter 计数器，Data 数据 SI，DI：Src，Dst 其中 memcpy(des, src) 函数的两个地址参数就专门存储在 DI，SI  在 \(8086\) 时代，Intel 对以上寄存器根据其各自功能进行相应的优化，直">
@@ -38,7 +38,7 @@
 <meta property="og:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/image-20221010095513873.png">
 <meta property="og:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/image-20221010120259820.png">
 <meta property="article:published_time" content="2023-04-08T15:31:20.512Z">
-<meta property="article:modified_time" content="2023-02-22T15:27:38.491Z">
+<meta property="article:modified_time" content="2023-04-08T15:35:01.680Z">
 <meta property="article:author" content="自是水长东">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/图片1-16768586729361.png">
@@ -56,7 +56,7 @@
   };
 </script>
 
-  <title> | 寄尘's Blog</title>
+  <title>ROP & JOP | 寄尘's Blog</title>
   
 
 
@@ -225,7 +225,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          ROP & JOP
         </h1>
 
         <div class="post-meta">
@@ -234,16 +234,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2023-04-08 23:31:20" itemprop="dateCreated datePublished" datetime="2023-04-08T23:31:20+08:00">2023-04-08</time>
+              <time title="创建时间：2023-04-08 23:31:20 / 修改时间：23:35:01" itemprop="dateCreated datePublished" datetime="2023-04-08T23:31:20+08:00">2023-04-08</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-22 23:27:38" itemprop="dateModified" datetime="2023-02-22T23:27:38+08:00">2023-02-22</time>
-              </span>
 
           
 
@@ -503,7 +497,7 @@ IBT 就是为了解决间接跳转的问题</p></li>
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.1%20ROP&JOP/" title="">http://example.com/2023/04/08/信息系统安全/Chap.1 ROP&JOP/</a>
+    <a href="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.1%20ROP&JOP/" title="ROP &amp; JOP">http://example.com/2023/04/08/信息系统安全/Chap.1 ROP&JOP/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
