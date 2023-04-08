@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Zhi Mang Xing:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":false,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Dinial of Service Attacks DoS Attacks 两种方式：  DoS bug：利用服务器本身的 bug 使其中断服务 DoS flood：利用僵尸网络产生大量请求使服务器无法响应外来合法请求  核心：以较少的计算资源来攻击较多计算资源的服务器使其瘫痪，本质是放大 网络模型中的每一层都可以用来发动 DoS 攻击  NTP Amplification a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="寄尘&#39;s Blog">
+<meta property="og:url" content="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.9%20Denial%20of%20Service/index.html">
+<meta property="og:site_name" content="寄尘&#39;s Blog">
+<meta property="og:description" content="Dinial of Service Attacks DoS Attacks 两种方式：  DoS bug：利用服务器本身的 bug 使其中断服务 DoS flood：利用僵尸网络产生大量请求使服务器无法响应外来合法请求  核心：以较少的计算资源来攻击较多计算资源的服务器使其瘫痪，本质是放大 网络模型中的每一层都可以用来发动 DoS 攻击  NTP Amplification a">
+<meta property="og:locale">
+<meta property="og:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/图片1-16702376524701.png">
+<meta property="og:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/image-20221205195816327.png">
+<meta property="og:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/image-20221205204308332.png">
+<meta property="article:published_time" content="2023-04-08T15:31:20.536Z">
+<meta property="article:modified_time" content="2023-02-20T10:51:58.156Z">
+<meta property="article:author" content="自是水长东">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="d:/All%20Documents/Markdown/MD杂项/MD.IMG/图片1-16702376524701.png">
+
+<link rel="canonical" href="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.9%20Denial%20of%20Service/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title> | 寄尘's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+<!-- <script src="/live2d/autoload.js"></script> --> <!-- 这条语句和live2d看板娘有关，去掉注释获得看板娘 -->
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <a target="_blank" rel="noopener" href="https://github.com/jichen2002" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">寄尘's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">人生寄一世，奄忽若飙尘</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.9%20Denial%20of%20Service/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="自是水长东">
+      <meta itemprop="description" content="Medicine, law, business, engineering: these are noble pursuits and necessary to sustain life. But poetry, beauty, romance, love... these are what we stay alive for.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="寄尘's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-08 23:31:20" itemprop="dateCreated datePublished" datetime="2023-04-08T23:31:20+08:00">2023-04-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-20 18:51:58" itemprop="dateModified" datetime="2023-02-20T18:51:58+08:00">2023-02-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="dinial-of-service-attacks">Dinial of Service Attacks</h1>
+<h2 id="dos-attacks">DoS Attacks</h2>
+<p>两种方式：</p>
+<ul>
+<li>DoS bug：利用服务器本身的 bug 使其中断服务</li>
+<li>DoS flood：利用僵尸网络产生大量请求使服务器无法响应外来合法请求</li>
+</ul>
+<p>核心：以较少的计算资源来攻击较多计算资源的服务器使其瘫痪，本质是<strong>放大</strong></p>
+<p>网络模型中的每一层都可以用来发动 DoS 攻击</p>
+<p><img src="D:\All Documents\Markdown\MD杂项\MD.IMG\图片1-16702376524701.png" alt="图片1" style="zoom:80%;" /></p>
+<h2 id="ntp-amplification-attack">NTP Amplification attack</h2>
+<p>网络时间协议（Network Time
+Protocol，NTP）协议是最早的互联网协议之一，主要为使互联网中的各种设备的时间保持同步</p>
+<p>在互联网上通常会存在一些公共的 NTP 服务器供客户机进行访问和使用，如
+Apple 公司的 <code>time.apple.com</code> 等，而 NTP
+攻击就是利用这些公共服务器的资源进行的</p>
+<h3 id="ntp-攻击原理">NTP 攻击原理</h3>
+<p>NTP 协议是基于 UDP 协议的 C-S 服务模型，由于 <strong>UDP
+协议的无连接性</strong>（不像 TCP
+具有三次握手过程）具有天然的不安全性，NTP DDoS（Distributed Denial of
+Service）攻击就是利用 NTP 服务器的不安全性漏洞来发起的</p>
+<p>其过程如下：</p>
+<ul>
+<li><p>寻找目标：被攻击对象，以及公共 NTP 服务器资源</p></li>
+<li><p>伪造被攻击对象的 IP 地址（即把 IP 头部中的 src addr
+更换为被攻击对象的 IP 地址，<strong>基于 UDP</strong>）向 NTP
+服务器发送请求实种同步报文，其中将包含 <code>monlist</code> 命令</p>
+<p><code>monlist</code> 命令将会令 NTP
+服务器返回最近与其进行过同分布的最后 <span
+class="math inline">\(600\)</span> 个 client 的
+IP。也就是说，只需要发送几百个 Bytes 的 query 就可以令服务器发送上万个
+Bytes 的 response。实测放大倍数通常能达到上百倍</p></li>
+<li><p>此时 NTP 服务器就会向被攻击对象的 IP 地址发送 NTP response
+数据包</p></li>
+<li><p>由于公共 NTP 服务器的数量众多，攻击者可以根据每个 NTP
+服务器的响应时间来选择发送 query
+的顺序，以令被攻击对象接收流量在一瞬间达到最大。攻击者若有 <span
+class="math inline">\(1\)</span> Gbps
+的带宽，那么很可能能够利用该漏洞令被攻击对象在瞬间承受上百 Gbps
+的流量</p></li>
+</ul>
+<p><strong>服务器恢复</strong></p>
+<p>对于服务器而言，其在一瞬间承受流量的大小与其恢复时间并非线性关系，随着其承受流量的增大，其恢复时间的增加得快得多</p>
+<p>当服务器在一瞬间承受流量过多情况下，除了服务器本身会出现崩溃的情况以外，链路带宽也无法承受。当一条链路的丢包率很高时（如
+<span
+class="math inline">\(80\%\)</span>），交换机将会将这条链路断掉，其原因在于：</p>
+<ul>
+<li><p>不断开链路有时会导致链路仍然存在于路由表中，而若路由器采用 RIP
+协议，则其算法的路径开销为跳数。若不断开，则该链路仍然是最短跳数的链路，所有发送的数据包仍然经由这条链路进行传输</p></li>
+<li><p>但此时使用 <span class="math inline">\(80\%\)</span>
+丢包率链路维持传输是没有意义的，client 和 server
+反而要花费更多的资源来处理丢包</p></li>
+<li><p>若断开则路由器会重新寻找次短路链路作为传输数据的途径，尽管删除链路会导致带宽降低，但至少能令数据包正常地被转发</p></li>
+</ul>
+<h3 id="mitigation">Mitigation</h3>
+<ul>
+<li>禁用 <code>monlist</code> 命令</li>
+<li>源 IP 验证：需要 Internet
+服务提供商（ISP）拒绝发送存在欺骗性的数据包：即从源地址与发送地址不同的数据包</li>
+</ul>
+<h2 id="syn-flood">SYN Flood</h2>
+<p>TCP 三次握手：</p>
+<ul>
+<li>client 生成随机数作为初始顺序号 <span
+class="math inline">\(\text{SN}_\mathrm C\)</span>（Seq Number），置
+<span class="math inline">\(\text{AN}_\mathrm C\)</span>（ACK Number）为
+<span class="math inline">\(0\)</span>，flag 为 SYN，发送给 server</li>
+<li>server 接收到 client 发送来的连接建立请求，也随机生成一个初始顺序号
+<span class="math inline">\(\text{SN}_\mathrm S\)</span> 并令 <span
+class="math inline">\(\text{AN}_\mathrm S=\text{SN}_{\mathrm
+C}+1\)</span>，flag 为 SYN/ACK，发送给 client</li>
+<li>client 最后令 <span
+class="math inline">\(\text{AN}_\text{C}=\text{SN}_\text{S}+1\)</span>，
+<span class="math inline">\(\text{SN}_\mathrm C=\text{SN}_\mathrm
+C+1\)</span>，flag 为 ACK，并捎带数据发送给 server</li>
+</ul>
+<p><img src="D:\All Documents\Markdown\MD杂项\MD.IMG\image-20221205195816327.png" alt="image-20221205195816327" style="zoom:80%;" /></p>
+<p>当 server 接收到 SYN 包时，其会提前在内存中开辟一个 window
+作为数据接收缓冲区，而攻击者可以利用这一点，不断对 server 发送虚假源 IP
+的 SYN 包请求建立 TCP 连接但不对 server 发来的 SYN/ACK
+包进行回复，这样就会导致 server
+不断开辟内存，直到内存不足导致服务器崩溃（杀死进程）</p>
+<p>而对于作为 window 的内存则需要等到 TCP timeout 之后才会回收，但等待
+timeout 的时间足以使得服务器内存被占满</p>
+<h3 id="mitigation-1">Mitigation</h3>
+<ul>
+<li>缩短 timeout：不合适，这将会导致网络不好的用户无法连接到服务器</li>
+<li>增大内存：不合适，内存增长相比于发包速度是杯水车薪</li>
+<li>不保存状态：不保存 <span
+class="math inline">\(\text{SN}_\text{C},\text{SN}_\text{S}\)</span>，并且等待至建立连接时才开辟内存</li>
+</ul>
+<p>但 <span
+class="math inline">\(\text{SN}_\text{C},\text{SN}_\text{S}\)</span>
+对于建立连接是必须的，因此需要将 <span
+class="math inline">\(\text{SN}_\text{C},\text{SN}_\text{S}\)</span>
+保存到网络之中</p>
+<h3 id="syn-cookies">SYN COOKIES</h3>
+<p>SYN Cookies 为将 <span
+class="math inline">\(\text{SN}_\text{C},\text{SN}_\text{S}\)</span>
+保存到网络中的常用方法：</p>
+<p>server 从 client 发送来的 SYN 包提取出以下信息：</p>
+<ul>
+<li>SAddr（Source Address）</li>
+<li>SPort（Source Port）</li>
+<li>DAddr（Destination Address）</li>
+<li>DPort（Destination Port）</li>
+<li><span class="math inline">\(\text{SN}_\text{C}\)</span>（Sequence
+Number of Client）</li>
+<li>T（Time）</li>
+</ul>
+<p>服务器中存储一个密钥 key，结合该密钥对其进行哈希计算： <span
+class="math display">\[
+\text{L = MACkey (SAddr, SPort, DAddr, DPort, SNC, T)  [24 bits]}
+\]</span> 最终得到计算出来而非随机得到的 <span
+class="math inline">\(\text{SN}_\text{S}\)</span>： <span
+class="math display">\[
+\text{SN}_\text{S}\text{ = (T | mss | L)    ( |L| = 24 bits )}
+\]</span> 并将其发送给 client</p>
+<p>当 client 使用该 <span
+class="math inline">\(\text{SN}_\text{S}\)</span>
+发送最后一次握手消息时： <span class="math display">\[
+\text{ACK ( AN = SN}_\text{S}+1,\text{ SN = SN}_\text{C}+1\ )
+\]</span> 可以倒推出计算 <span
+class="math inline">\(\text{SN}_\text{S}\)</span> 时使用的信息，包括源
+IP 地址、源端口、目的 IP 地址、目的端口（存于 IP 头部中）以及 <span
+class="math inline">\(\text{SN}_\text{C}\)</span> 和 Time（包含在 <span
+class="math inline">\(\text{SN}_\text{S}\)</span> 中）</p>
+<p>利用这些信息计算哈希值进行比对，若正确则说明该服务器之前确实从该
+client 接收到 SYN 包（<span
+class="math inline">\(\text{SN}_\text{C}\)</span> 正确），并且确实向该
+client 发出过 SYN/ACK 包（<span
+class="math inline">\(\text{SN}_\text{S}\)</span> 正确）</p>
+<p>在这种情况下，攻击者发送的是虚假的源 IP，因此无法与 server 完成 <span
+class="math inline">\(3\)</span> 次握手，所以就无法令 server
+开辟内存空间了。至于攻击者必须采用虚假源 IP 的原因在于若采用攻击者自身的
+IP，由于服务器资源通常与攻击者资源不在一个数量级，攻击者无法承受过多的
+SYN/ACK 数据包</p>
+<p><strong>Random Initial Seq Num</strong></p>
+<p>SYN Cookies 技术本身除了能够解决 SYN Flood
+攻击以外，其本身还能够防范一些服务器本身可能存在的
+bug，如服务器若采用时间产生随机数种子的防范来生成初始顺序号</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">srand(timenow());</span><br><span class="line">seq = rand()</span><br></pre></td></tr></table></figure>
+<p>那么此时 <code>seq</code> 将会很容易被猜到，假设此时 server 不采用
+SYN Cookies 技术，而仅仅只是令开闭 Window 的阶段转移到 TCP
+连接建立，那么该 server 仍然会收到 SYN Flood 的攻击：</p>
+<ul>
+<li>attacker 向 server 发送 srcIP = victim 的 TCP SYN 数据包</li>
+<li>server 向 victim 发送 SYN/ACK 包进行确认</li>
+<li>由于 server 的 SN 为由时间产生的随机数种子生成，attacker
+只需同步时间即可猜出 server 的 SN，因此 attacker 继续假冒 victim 向
+server 发送 ACK 包</li>
+<li>server 收到正确的 ACK 包，连接建立，开闭 Window 接收缓冲区</li>
+</ul>
+<p><img src="D:\All Documents\Markdown\MD杂项\MD.IMG\image-20221205204308332.png" alt="image-20221205204308332" style="zoom: 67%;" /></p>
+<h1 id="dinial-of-service-mitigation">Dinial of Service Mitigation</h1>
+<h2 id="client-puzzles">Client Puzzles</h2>
+<p>寻找一个难解易验证的问题要求 client 连接时必须给出答案，该方法</p>
+<ul>
+<li>目的：减慢攻击者的速度</li>
+<li>核心：验证答案很容易</li>
+</ul>
+<p>这种问题可以在 NP 问题（存在 verifier
+能在多项式时间内验证答案）中寻找，如： <span class="math display">\[
+\text{LSB}_n\text{ ( SHA-1( C || X ) ) = 0}^n
+\]</span> 即给出字符串 C，要求 client 给出一个字符串 X 使得 C concat X
+的哈希值的前 <span class="math inline">\(n\)</span> 位为 <span
+class="math inline">\(0\)</span>，该问题具有 <span
+class="math inline">\(2^n\)</span> 指数级的时间复杂度</p>
+<p>当 <span class="math inline">\(n=16\)</span> 时，对于一个 <span
+class="math inline">\(1\)</span>GHz 的机器需要 <span
+class="math inline">\(0.3\)</span> sec 才能解决</p>
+<p>因此该方式还有一个好处：可以根据服务器负载动态调节 <span
+class="math inline">\(n\)</span> 的大小来进行负载均衡</p>
+<ul>
+<li><p>同时该问题是随机给出的，对于正常用户而言，并不会频繁发起连接，因此遇到的几率较小；而对于攻击者而言，其需要大量发起连接，因此更加容易遇到
+client puzzles</p></li>
+<li><p>又或者是当未发生攻击时，不启用 client puzzle；当检测出可能存在
+DoS 攻击时，要求每个 client 都要解决 client puzzle</p></li>
+</ul>
+<p><strong>限制</strong></p>
+<ul>
+<li>client 与 server 上的程序都需要进行修改</li>
+<li>将阻止低算力的合法用户访问（如使用手机或平板电脑的用户，其机器算力不足以支撑它们解决该问题）</li>
+</ul>
+<h3 id="better-puzzles-captcha">Better Puzzles: CAPTCHA</h3>
+<p>Completely Automated Public Turing test to tell Computers and Humans
+Apart，即我们通常遇到的验证码</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>自是水长东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.9%20Denial%20of%20Service/" title="">http://example.com/2023/04/08/信息系统安全/Chap.9 Denial of Service/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/04/08/%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8/Chap.8%20Transient%20Execution/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#dinial-of-service-attacks"><span class="nav-number">1.</span> <span class="nav-text">Dinial of Service Attacks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#dos-attacks"><span class="nav-number">1.1.</span> <span class="nav-text">DoS Attacks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ntp-amplification-attack"><span class="nav-number">1.2.</span> <span class="nav-text">NTP Amplification attack</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ntp-%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.1.</span> <span class="nav-text">NTP 攻击原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mitigation"><span class="nav-number">1.2.2.</span> <span class="nav-text">Mitigation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#syn-flood"><span class="nav-number">1.3.</span> <span class="nav-text">SYN Flood</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mitigation-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">Mitigation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#syn-cookies"><span class="nav-number">1.3.2.</span> <span class="nav-text">SYN COOKIES</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dinial-of-service-mitigation"><span class="nav-number">2.</span> <span class="nav-text">Dinial of Service Mitigation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#client-puzzles"><span class="nav-number">2.1.</span> <span class="nav-text">Client Puzzles</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#better-puzzles-captcha"><span class="nav-number">2.1.1.</span> <span class="nav-text">Better Puzzles: CAPTCHA</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="自是水长东"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">自是水长东</p>
+  <div class="site-description" itemprop="description">Medicine, law, business, engineering: these are noble pursuits and necessary to sustain life. But poetry, beauty, romance, love... these are what we stay alive for.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=27483202&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<!-- 访客数和访问量的设置 -->
+<div class="busuanzi-count">
+  <script async="" src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js";></script>
+
+  <span class="site-uv">
+  <i class="fa fa-user"> 本站访客数</i>
+  <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  人
+  </span>
+
+  <span class="site-pv">
+  <i class="fa fa-eye"> 本站总访问量</i>
+  <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  次
+  </span>
+
+</div>
+
+ <!-- 网站运行时间的设置 -->
+    <span id="timeDate">载入天数...</span>
+    <span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insane move.
+    <script>
+        var now = new Date();
+        function createtime() {
+            var grt= new Date("09/01/2021 00:00:00");//此处修改你的建站时间或者网站上线时间
+            now.setTime(now.getTime()+250);
+            days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+            hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+            if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+            mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+            seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+            snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+            document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+            document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+    </script><script color="255,105,180" 
+ opacity="0.5" 
+ zIndex="-1" 
+ count="150" 
+ src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js">
+ </script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
