@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Zhi Mang Xing:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":false,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Multer Multer 是 Express 官方推出的，用于 Node.js 处理 multipart&#x2F;form-data 请求数据处理的中间件。它基于 busboy 构建，可以高效的处理文件上传，但并不处理 multipart&#x2F;form-data 之外的用户请求 Getting Started 1234567891011121314151617181920212223242526">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Multer">
+<meta property="og:url" content="http://example.com/2023/05/29/Multer/index.html">
+<meta property="og:site_name" content="寄尘&#39;s Blog">
+<meta property="og:description" content="Multer Multer 是 Express 官方推出的，用于 Node.js 处理 multipart&#x2F;form-data 请求数据处理的中间件。它基于 busboy 构建，可以高效的处理文件上传，但并不处理 multipart&#x2F;form-data 之外的用户请求 Getting Started 1234567891011121314151617181920212223242526">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/.com//All%20Documents/Markdown/MD杂项/MD.IMG/image-20230503100109821.png">
+<meta property="og:image" content="http://example.com/.com//All%20Documents/Markdown/MD杂项/MD.IMG/image-20230503100233237.png">
+<meta property="article:published_time" content="2023-05-29T05:55:00.261Z">
+<meta property="article:modified_time" content="2023-05-29T05:55:24.683Z">
+<meta property="article:author" content="自是水长东">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/.com//All%20Documents/Markdown/MD杂项/MD.IMG/image-20230503100109821.png">
+
+<link rel="canonical" href="http://example.com/2023/05/29/Multer/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Multer | 寄尘's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+<!-- <script src="/live2d/autoload.js"></script> --> <!-- 这条语句和live2d看板娘有关，去掉注释获得看板娘 -->
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <a target="_blank" rel="noopener" href="https://github.com/jichen2002" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">寄尘's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">人生寄一世，奄忽若飙尘</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/29/Multer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="自是水长东">
+      <meta itemprop="description" content="Medicine, law, business, engineering: these are noble pursuits and necessary to sustain life. But poetry, beauty, romance, love... these are what we stay alive for.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="寄尘's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Multer
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-29 13:55:00 / 修改时间：13:55:24" itemprop="dateCreated datePublished" datetime="2023-05-29T13:55:00+08:00">2023-05-29</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="multer">Multer</h1>
+<p>Multer 是 Express 官方推出的，用于 Node.js 处理 multipart/form-data
+请求数据处理的中间件。它基于 busboy
+构建，可以高效的处理文件上传，但并不处理 multipart/form-data
+之外的用户请求</p>
+<h2 id="getting-started">Getting Started</h2>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// multer_example.js</span></span><br><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&quot;express&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"><span class="keyword">const</span> multer = <span class="built_in">require</span>(<span class="string">&quot;multer&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&quot;path&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置上传路径</span></span><br><span class="line"><span class="keyword">let</span> upload = multer(&#123; <span class="attr">dest</span>: path.join(__dirname, <span class="string">&quot;upload&quot;</span>) &#125;);</span><br><span class="line"><span class="comment">// express 托管文件</span></span><br><span class="line">app.use(express.static(path.join(__dirname, <span class="string">&quot;html&quot;</span>)));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 监听相关的 url 和请求，.get 方法对应客户端发起的 http 请求头 get</span></span><br><span class="line">app.get(<span class="string">&quot;/&quot;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// &quot;/upload&quot; 对应 html 文件中表单的 action 属性</span></span><br><span class="line">app.post(<span class="string">&quot;/upload&quot;</span>, upload.any(), <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.files[<span class="number">0</span>]);</span><br><span class="line">  res.send(&#123; <span class="attr">msg</span>: <span class="string">&quot;Successfully&quot;</span> &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 监听 8888 端口</span></span><br><span class="line"><span class="keyword">const</span> port = <span class="number">8888</span>;</span><br><span class="line">app.listen(port, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Example app listening on port <span class="subst">$&#123;port&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>HTML 页面：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- index.html --&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/upload&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;upload&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>文件结构：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">multer</span><br><span class="line">├── html</span><br><span class="line">│   └── index.html</span><br><span class="line">├── upload</span><br><span class="line">└── multer_example.js</span><br></pre></td></tr></table></figure>
+<p>上传成功后浏览器停留在 http://localhost:8888/upload，显示为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;msg&quot;:&quot;Successfully&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>后端打印文件信息：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">destination:<span class="string">&#x27;E:\\...\\multer\\upload&#x27;</span></span><br><span class="line"><span class="attr">encoding</span>:<span class="string">&#x27;7bit&#x27;</span></span><br><span class="line"><span class="attr">fieldname</span>:<span class="string">&#x27;file&#x27;</span></span><br><span class="line"><span class="attr">filename</span>:<span class="string">&#x27;b543436a50b2ff822e5b372b240808d9&#x27;</span></span><br><span class="line"><span class="attr">mimetype</span>:<span class="string">&#x27;application/pdf&#x27;</span></span><br><span class="line"><span class="attr">originalname</span>:<span class="string">&#x27;New File.pdf&#x27;</span></span><br><span class="line"><span class="attr">path</span>:<span class="string">&#x27;E:\\...d\\multer\\upload\\b543436a50b2ff822e5b372b240808d9&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>文件结构变为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">multer</span><br><span class="line">├── html</span><br><span class="line">│   └── index.html</span><br><span class="line">├── upload</span><br><span class="line">│   └── b543436a50b2ff822e5b372b240808d9</span><br><span class="line">└── multer_example.js</span><br></pre></td></tr></table></figure>
+<h2 id="api">API</h2>
+<h3 id="file-information">File information</h3>
+<p>Each file contains the following information:</p>
+<table>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 67%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Key</th>
+<th>Description</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fieldname</code></td>
+<td>Field name specified in the form<br>Field name 由表单指定</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>originalname</code></td>
+<td>Name of the file on the user's
+computer<br>用户计算机上的文件的名称</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>encoding</code></td>
+<td>Encoding type of the file<br>文件编码</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>mimetype</code></td>
+<td>Mime type of the file<br> 文件的 MIME 类型</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>size</code></td>
+<td>Size of the file in bytes<br>文件大小（字节单位）</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>destination</code></td>
+<td>The folder to which the file has been saved<br>保存路径</td>
+<td><code>DiskStorage</code></td>
+</tr>
+<tr class="odd">
+<td><code>filename</code></td>
+<td>The name of the file within the <code>destination</code><br>
+保存在 <code>destination</code> 中的文件名</td>
+<td><code>DiskStorage</code></td>
+</tr>
+<tr class="even">
+<td><code>path</code></td>
+<td>The full path to the uploaded file<br>已上传文件的完整路径</td>
+<td><code>DiskStorage</code></td>
+</tr>
+<tr class="odd">
+<td><code>buffer</code></td>
+<td>A <code>Buffer</code> of the entire file<br>一个存放了整个文件的
+<code>Buffer</code></td>
+<td><code>MemoryStorage</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="multeropts">multer(opts)</h3>
+<p>Multer accepts an options object, the most basic of which is the
+<code>dest</code> property, which tells Multer where to upload the
+files. In case you omit the options object, the files will be kept in
+memory and never written to disk.</p>
+<p>Multer 接受一个 options 对象，其中最基本的是 <code>dest</code>
+属性，这将告诉 Multer 将上传文件保存在哪。如果你省略 options
+对象，这些文件将保存在内存中，永远不会写入磁盘</p>
+<p>By default, Multer will rename the files so as to avoid naming
+conflicts. The renaming function can be customized according to your
+needs.</p>
+<p>为了避免命名冲突，Multer
+会修改上传的文件名。这个重命名功能可以根据您的需要定制</p>
+<p>The following are the options that can be passed to Multer.</p>
+<table>
+<colgroup>
+<col style="width: 24%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dest</code> or <code>storage</code></td>
+<td>Where to store the files<br> 在哪里存储文件</td>
+</tr>
+<tr class="even">
+<td><code>fileFilter</code></td>
+<td>Function to control which files are
+accepted<br>文件过滤器，控制哪些文件可以被接受</td>
+</tr>
+<tr class="odd">
+<td><code>limits</code></td>
+<td>Limits of the uploaded data<br> 限制上传的数据</td>
+</tr>
+<tr class="even">
+<td><code>preservePath</code></td>
+<td>Keep the full path of files instead of just the base
+name<br>保存包含文件名的完整文件路径</td>
+</tr>
+</tbody>
+</table>
+<p>In an average web app, only <code>dest</code> might be required, and
+configured as shown in the following example.</p>
+<p>通常，一般的网页应用，只需要设置 <code>dest</code> 属性，像这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const upload = multer(&#123; dest: &#x27;uploads/&#x27; &#125;)</span><br></pre></td></tr></table></figure>
+<p>==在使用 <code>dest</code>
+属性时，若该文件路径不存在则会自动创建该文件路径==</p>
+<p>If you want more control over your uploads, you'll want to use the
+<code>storage</code> option instead of <code>dest</code>. Multer ships
+with storage engines <code>DiskStorage</code> and
+<code>MemoryStorage</code>; More engines are available from third
+parties.</p>
+<p>如果你想在上传时进行更多的控制，你可以使用 <code>storage</code>
+选项替代 <code>dest</code>。Multer 具有 <code>DiskStorage</code> 和
+<code>MemoryStorage</code>
+两个存储引擎；另外还可以从第三方获得更多可用的引擎</p>
+<h4 id="singlefieldname">.single(fieldname)</h4>
+<p>Accept a single file with the name <code>fieldname</code>. The single
+file will be stored in <code>req.file</code>.</p>
+<p>接受一个以 <code>fieldname</code> 命名的文件（<code>fieldname</code>
+是一个字符串）。这个文件的信息保存在 <code>req.file</code>。注意相较于
+<code>.any()</code> 而言 <code>.single(fieldname)</code> 方法</p>
+<ul>
+<li><p>必须传入 <code>fieldname</code> 属性，它对应 HTML 中选择文件时的
+<code>name</code> 属性的值</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>其信息保存在 <code>req.file</code> 中而不是
+<code>req.files</code>，<code>req.file</code> 不像
+<code>req.files</code> 是一个类数组对象，它只包含一个文件信息</p></li>
+</ul>
+<h4 id="arrayfieldname-maxcount">.array(fieldname[, maxCount])</h4>
+<p>Accept an array of files, all with the name <code>fieldname</code>.
+Optionally error out if more than <code>maxCount</code> files are
+uploaded. The array of files will be stored in
+<code>req.files</code>.</p>
+<p>接受一个以 <code>fieldname</code> 命名的文件数组。可以配置
+<code>maxCount</code> 来限制上传的最大数量。这些文件的信息保存在
+<code>req.files</code>。注意上传的文件数量不能超过
+<code>maxCount</code>，否则 multer 会发出
+<code>LIMIT_UNEXPECTED_FILE</code> 错误，并且不会接收任何文件</p>
+<p><code>LIMIT_UNEXPECTED_FILE</code> 错误例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// multer_example.js</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">app.post(<span class="string">&quot;/upload&quot;</span>, upload.array(<span class="string">&quot;file&quot;</span>, <span class="number">1</span>), <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.files);</span><br><span class="line">  res.send(&#123; <span class="attr">msg</span>: <span class="string">&quot;Successfully&quot;</span> &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+<p>HTML 文件：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- index.html --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/upload&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;upload&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- ... --&gt;</span></span><br></pre></td></tr></table></figure>
+<p>若此时上传两个文件：</p>
+<p><img src="/.com//All Documents\Markdown\MD杂项\MD.IMG\image-20230503100109821.png" alt="image-20230503100109821" style="zoom:80%;"></p>
+<p>会发生错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MulterError: Unexpected field</span><br></pre></td></tr></table></figure>
+<p>若只上传一个文件，或将 <code>maxCount</code> 属性修改为 <span class="math inline">\(2\)</span>，就可以成功上传：</p>
+<p><img src="/.com//All Documents\Markdown\MD杂项\MD.IMG\image-20230503100233237.png" alt="image-20230503100233237" style="zoom:80%;"></p>
+<h4 id="fieldsfields">.fields(fields)</h4>
+<p>Accept a mix of files, specified by <code>fields</code>. An object
+with arrays of files will be stored in <code>req.files</code>.</p>
+<p>接受指定 <code>fields</code> 的混合文件。这些文件的信息保存在
+<code>req.files</code></p>
+<p><code>fields</code> should be an array of objects with
+<code>name</code> and optionally a <code>maxCount</code>. Example:</p>
+<p><code>fields</code> 应该是一个对象数组，应该具有 <code>name</code>
+和可选的 <code>maxCount</code> 属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123; name: &#x27;avatar&#x27;, maxCount: 1 &#125;,</span><br><span class="line">  &#123; name: &#x27;gallery&#x27;, maxCount: 8 &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h4 id="none">.none()</h4>
+<p>Accept only text fields. If any file upload is made, error with code
+"LIMIT_UNEXPECTED_FILE" will be issued.</p>
+<p>只接受文本域。如果任何文件上传到这个模式，将发生
+<code>LIMIT_UNEXPECTED_FILE</code> 错误。这和
+<code>upload.fields([])</code> 或 <code>upload.array("", 0)</code>
+的效果一样</p>
+<h4 id="any">.any()</h4>
+<p>Accepts all files that comes over the wire. An array of files will be
+stored in <code>req.files</code>.</p>
+<p>接受一切上传的文件。文件数组将保存在 <code>req.files</code></p>
+<p><strong>WARNING:</strong> Make sure that you always handle the files
+that a user uploads. Never add multer as a global middleware since a
+malicious user could upload files to a route that you didn't anticipate.
+Only use this function on routes where you are handling the uploaded
+files.</p>
+<p><strong>警告：</strong>确保你总是处理了用户的文件上传。 永远不要将
+multer
+作为全局中间件使用，因为恶意用户可以上传文件到一个你没有预料到的路由，应该只在你需要处理上传文件的路由上使用</p>
+<h3 id="storage">storage</h3>
+<h4 id="diskstorage">DiskStorage</h4>
+<p>The disk storage engine gives you full control on storing files to
+disk.</p>
+<p>磁盘存储引擎可以让你控制文件的存储</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> storage = multer.diskStorage(&#123;</span><br><span class="line">  <span class="attr">destination</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, file, cb</span>) </span>&#123;</span><br><span class="line">    cb(<span class="literal">null</span>, <span class="string">&#x27;/tmp/my-uploads&#x27;</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">filename</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, file, cb</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> uniqueSuffix = <span class="built_in">Date</span>.now() + <span class="string">&#x27;-&#x27;</span> + <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random() * <span class="number">1E9</span>)</span><br><span class="line">    cb(<span class="literal">null</span>, file.fieldname + <span class="string">&#x27;-&#x27;</span> + uniqueSuffix)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> upload = multer(&#123; <span class="attr">storage</span>: storage &#125;)</span><br></pre></td></tr></table></figure>
+<p>There are two options available, <code>destination</code> and
+<code>filename</code>. They are both functions that determine where the
+file should be stored.</p>
+<p>有两个选项可用，<code>destination</code> 和
+<code>filename</code>。他们都是用来确定文件存储位置的函数</p>
+<p><code>destination</code> is used to determine within which folder the
+uploaded files should be stored. This can also be given as a
+<code>string</code> (e.g. <code>'/tmp/uploads'</code>). If no
+<code>destination</code> is given, the operating system's default
+directory for temporary files is used.</p>
+<p><code>destination</code>
+是用来确定上传的文件应该存储在哪个文件夹中。也可以提供一个
+<code>string</code>（例如 <code>'/tmp/uploads'</code>）。如果没有设置
+<code>destination</code>，则使用操作系统默认的临时文件夹</p>
+<p>但若设置了 <code>destination</code>，但 <code>destination</code>
+不存在则不会像 <code>dest</code>
+属性一样为你创建该路径，此时你会在网页中收到错误：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: ENOENT: no such file or directory, open &#x27;E:\upload\file<span class="number">-1683080129197</span><span class="number">-227389065</span>&#x27;</span><br></pre></td></tr></table></figure>
+<p><strong>Note:</strong> You are responsible for creating the directory
+when providing <code>destination</code> as a function. When passing a
+string, multer will make sure that the directory is created for you.</p>
+<p><strong>注意:</strong> 如果你提供的 <code>destination</code>
+是一个函数，你需要负责创建文件夹。当提供一个字符串，multer
+将确保这个文件夹是你创建的</p>
+<p><code>filename</code> is used to determine what the file should be
+named inside the folder. If no <code>filename</code> is given, each file
+will be given a random name that doesn't include any file extension.</p>
+<p><code>filename</code> 用于确定文件夹中的文件名的确定。 如果没有设置
+<code>filename</code>，每个文件将设置为一个随机文件名，并且是没有扩展名的</p>
+<p><strong>Note:</strong> Multer will not append any file extension for
+you, your function should return a filename complete with an file
+extension.</p>
+<p><strong>注意:</strong> Multer
+不会为你添加任何扩展名，你的程序应该返回一个完整的文件名</p>
+<p>Each function gets passed both the request (<code>req</code>) and
+some information about the file (<code>file</code>) to aid with the
+decision.</p>
+<p>每个函数都传递了请求对象（<code>req</code>）和一些关于这个文件的信息（<code>file</code>），有助于你的决定</p>
+<p>Note that <code>req.body</code> might not have been fully populated
+yet. It depends on the order that the client transmits fields and files
+to the server.</p>
+<p>注意 <code>req.body</code>
+可能还没有完全填充，这取决于向客户端发送字段和文件到服务器的顺序</p>
+<p>For understanding the calling convention used in the callback
+(needing to pass null as the first param), refer to <a target="_blank" rel="noopener" href="https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors">Node.js
+error handling</a></p>
+<h5 id="example">Example</h5>
+<p>使用 DiskStorage 给出的官方用例（修改路径为 <code>/upload</code>）和
+<code>.any()</code> 方法来接收两个相同 <code>fieldname</code>
+的文件：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- index.html --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/upload&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;upload&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- ... --&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上传成功后的文件结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">multer</span><br><span class="line">├── html</span><br><span class="line">│   └── index.html</span><br><span class="line">├── upload</span><br><span class="line">│   ├── file-1683080390596-234603839</span><br><span class="line">│   └── file-1683080390597-959668429</span><br><span class="line">└── multer_example.js</span><br></pre></td></tr></table></figure>
+<h4 id="memorystorage">MemoryStorage</h4>
+<p>The memory storage engine stores the files in memory as
+<code>Buffer</code> objects. It doesn't have any options.</p>
+<p>内存存储引擎将文件存储在内存中的 <code>Buffer</code>
+对象，它没有任何选项</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const storage = multer.memoryStorage()</span><br><span class="line">const upload = multer(&#123; storage: storage &#125;)</span><br></pre></td></tr></table></figure>
+<p>When using memory storage, the file info will contain a field called
+<code>buffer</code> that contains the entire file.</p>
+<p>当使用内存存储引擎，文件信息将包含一个 <code>buffer</code>
+字段，里面包含了整个文件数据</p>
+<p><strong>WARNING</strong>: Uploading very large files, or relatively
+small files in large numbers very quickly, can cause your application to
+run out of memory when memory storage is used.</p>
+<p><strong>警告：</strong>当你使用内存存储，上传非常大的文件，或者非常多的小文件，会导致你的应用程序内存溢出</p>
+<h3 id="limits">limits</h3>
+<p>An object specifying the size limits of the following optional
+properties. Multer passes this object into busboy directly, and the
+details of the properties can be found on <a target="_blank" rel="noopener" href="https://github.com/mscdex/busboy#busboy-methods">busboy's
+page</a>.</p>
+<p>一个对象，指定一些数据大小的限制。Multer 通过这个对象使用
+busboy，详细的特性可以在 <a target="_blank" rel="noopener" href="https://github.com/mscdex/busboy#busboy-methods">busboy's page</a>
+找到</p>
+<p>The following integer values are available:</p>
+<table>
+<colgroup>
+<col style="width: 17%">
+<col style="width: 71%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Key</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fieldNameSize</code></td>
+<td>Max field name size<br>field 名字最大长度</td>
+<td>100 bytes</td>
+</tr>
+<tr class="even">
+<td><code>fieldSize</code></td>
+<td>Max field value size (in bytes)<br>field 值的最大长度</td>
+<td>1MB</td>
+</tr>
+<tr class="odd">
+<td><code>fields</code></td>
+<td>Max number of non-file fields<br>非文件 field 的最大数量</td>
+<td>Infinity</td>
+</tr>
+<tr class="even">
+<td><code>fileSize</code></td>
+<td>For multipart forms, the max file size (in bytes)<br>在 multipart
+表单中，文件最大长度（字节单位）</td>
+<td>Infinity</td>
+</tr>
+<tr class="odd">
+<td><code>files</code></td>
+<td>For multipart forms, the max number of file fields<br>在 multipart
+表单中，文件最大数量</td>
+<td>Infinity</td>
+</tr>
+<tr class="even">
+<td><code>parts</code></td>
+<td>For multipart forms, the max number of parts (fields +
+files)<br>在 multipart 表单中，part 传输的最大数量（fields +
+files）</td>
+<td>Infinity</td>
+</tr>
+<tr class="odd">
+<td><code>headerPairs</code></td>
+<td>For multipart forms, the max number of header key=&gt;value pairs to
+parse<br>在 multipart 表单中，键值对最大组数</td>
+<td>2000</td>
+</tr>
+</tbody>
+</table>
+<p>Specifying the limits can help protect your site against denial of
+service (DoS) attacks.</p>
+<p>设置 limits 可以帮助保护你的站点抵御拒绝服务（DoS）攻击</p>
+<h3 id="filefilter">fileFilter</h3>
+<p>Set this to a function to control which files should be uploaded and
+which should be skipped. The function should look like this:</p>
+<p>设置一个函数来控制什么文件可以上传以及什么文件应该跳过，这个函数应该看起来像这样</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fileFilter</span> (<span class="params">req, file, cb</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// The function should call `cb` with a boolean</span></span><br><span class="line">  <span class="comment">// to indicate if the file should be accepted</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// To reject this file pass `false`, like so:</span></span><br><span class="line">  cb(<span class="literal">null</span>, <span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// To accept the file pass `true`, like so:</span></span><br><span class="line">  cb(<span class="literal">null</span>, <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// You can always pass an error if something goes wrong:</span></span><br><span class="line">  cb(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;I don\&#x27;t have a clue!&#x27;</span>))</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="error-handling">Error handling</h2>
+<p>When encountering an error, Multer will delegate the error to
+Express. You can display a nice error page using <a target="_blank" rel="noopener" href="http://expressjs.com/guide/error-handling.html">the standard
+express way</a>.</p>
+<p>当遇到一个错误，multer 将会把错误发送给
+express。你可以使用一个比较好的错误展示页（<a target="_blank" rel="noopener" href="http://expressjs.com/guide/error-handling.html">express标准方式</a>）</p>
+<p>If you want to catch errors specifically from Multer, you can call
+the middleware function by yourself. Also, if you want to catch only <a target="_blank" rel="noopener" href="https://github.com/expressjs/multer/blob/master/lib/multer-error.js">the
+Multer errors</a>, you can use the <code>MulterError</code> class that
+is attached to the <code>multer</code> object itself (e.g.
+<code>err instanceof multer.MulterError</code>).</p>
+<p>如果你想捕捉 Multer
+发出的错误，你可以自己调用中间件程序。如果你想捕捉 <a target="_blank" rel="noopener" href="https://github.com/expressjs/multer/blob/master/lib/multer-error.js">Multer
+错误</a>，你可以使用 <code>multer</code> 对象下的
+<code>MulterError</code> 类（即
+<code>err instanceof multer.MulterError</code>）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> multer = <span class="built_in">require</span>(<span class="string">&#x27;multer&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> upload = multer().single(<span class="string">&#x27;avatar&#x27;</span>)</span><br><span class="line"></span><br><span class="line">app.post(<span class="string">&#x27;/profile&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  upload(req, res, <span class="function"><span class="keyword">function</span> (<span class="params">err</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (err <span class="keyword">instanceof</span> multer.MulterError) &#123;</span><br><span class="line">      <span class="comment">// A Multer error occurred when uploading.</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      <span class="comment">// An unknown error occurred when uploading.</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Everything went fine.</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>Multer 错误包含：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> util = <span class="built_in">require</span>(<span class="string">&#x27;util&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> errorMessages = &#123;</span><br><span class="line">  <span class="attr">LIMIT_PART_COUNT</span>: <span class="string">&#x27;Too many parts&#x27;</span>,</span><br><span class="line">  <span class="attr">LIMIT_FILE_SIZE</span>: <span class="string">&#x27;File too large&#x27;</span>,</span><br><span class="line">  <span class="attr">LIMIT_FILE_COUNT</span>: <span class="string">&#x27;Too many files&#x27;</span>,</span><br><span class="line">  <span class="attr">LIMIT_FIELD_KEY</span>: <span class="string">&#x27;Field name too long&#x27;</span>,</span><br><span class="line">  <span class="attr">LIMIT_FIELD_VALUE</span>: <span class="string">&#x27;Field value too long&#x27;</span>,</span><br><span class="line">  <span class="attr">LIMIT_FIELD_COUNT</span>: <span class="string">&#x27;Too many fields&#x27;</span>,</span><br><span class="line">  <span class="attr">LIMIT_UNEXPECTED_FILE</span>: <span class="string">&#x27;Unexpected field&#x27;</span>,</span><br><span class="line">  <span class="attr">MISSING_FIELD_NAME</span>: <span class="string">&#x27;Field name missing&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MulterError</span> (<span class="params">code, field</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">Error</span>.captureStackTrace(<span class="built_in">this</span>, <span class="built_in">this</span>.constructor)</span><br><span class="line">  <span class="built_in">this</span>.name = <span class="built_in">this</span>.constructor.name</span><br><span class="line">  <span class="built_in">this</span>.message = errorMessages[code]</span><br><span class="line">  <span class="built_in">this</span>.code = code</span><br><span class="line">  <span class="keyword">if</span> (field) <span class="built_in">this</span>.field = field</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">util.inherits(MulterError, <span class="built_in">Error</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = MulterError</span><br></pre></td></tr></table></figure>
+<h2 id="final-example">Final Example</h2>
+<p>最后我们同时使用 Multer 的错误处理，以及 <code>limits</code> 属性和
+<code>fileFilter</code> 属性来限制上传的文件，如仅接受最多 1 个不超过
+100KB 的 PDF 文件时：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// multer_example.js</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">let</span> upload = multer(&#123;</span><br><span class="line">  <span class="attr">limits</span>: &#123;</span><br><span class="line">    <span class="attr">fileSize</span>: <span class="number">100</span> * <span class="number">1024</span>,</span><br><span class="line">    <span class="attr">files</span>: <span class="number">1</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">storage</span>: multer.diskStorage(&#123;</span><br><span class="line">    <span class="attr">destination</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, file, cb</span>) </span>&#123;</span><br><span class="line">      cb(<span class="literal">null</span>, path.join(__dirname, <span class="string">&quot;upload&quot;</span>));</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="attr">fileFilter</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, file, cb</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (file.mimetype == <span class="string">&quot;application/pdf&quot;</span>) &#123;</span><br><span class="line">      cb(<span class="literal">null</span>, <span class="literal">true</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      cb(<span class="literal">null</span>, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;).any(); </span><br><span class="line"><span class="comment">// 注意此处 ↑ 需要直接指定用什么方法接收文件，由于我们可以使用 limits 属性来限制文件，</span></span><br><span class="line"><span class="comment">// 我们可以直接使用 .any() 方法，其它方法都可以用 limits + .any() 来实现</span></span><br><span class="line"></span><br><span class="line">app.post(<span class="string">&quot;/upload&quot;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">    </span><br><span class="line">  upload(req, res, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      res.send(&#123; <span class="attr">err</span>: err &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(req.files);</span><br><span class="line">      res.send(&#123; <span class="attr">msg</span>: <span class="string">&quot;Successfully&quot;</span> &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+<p>此时，</p>
+<ul>
+<li><p>若上传的是非 PDF
+文件，即使该文件违反了其它限制（如文件大小）<code>err</code>
+也不会出现错误消息，但后端也不会将该文件保存。显然
+<code>fileFilter</code> 是先于 <code>limits</code>
+检查被调用的，因此若需要文件大小超出限制时不报错，可以将大小检查放到
+<code>fileFilter</code> 中</p></li>
+<li><p>若上传的 PDF 文件超过 100KB，则 <code>err</code>
+中的错误消息为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">&quot;err&quot;</span>:&#123;<span class="attr">&quot;name&quot;</span>:<span class="string">&quot;MulterError&quot;</span>,<span class="attr">&quot;message&quot;</span>:<span class="string">&quot;File too large&quot;</span>,<span class="attr">&quot;code&quot;</span>:<span class="string">&quot;LIMIT_FILE_SIZE&quot;</span>,<span class="attr">&quot;field&quot;</span>:<span class="string">&quot;file&quot;</span>,<span class="attr">&quot;storageErrors&quot;</span>:[]&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>其中 MIME 类型可以在 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types">MIME
+类型 - HTTP | MDN (mozilla.org)</a> 和 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types">常见
+MIME 类型列表 - HTTP | MDN (mozilla.org)</a> 中找到</p>
+<h2 id="custom-storage-engine">Custom storage engine</h2>
+<p>For information on how to build your own storage engine, see <a target="_blank" rel="noopener" href="https://github.com/expressjs/multer/blob/master/StorageEngine.md">Multer
+Storage Engine</a>.</p>
+<h2 id="cautions">Cautions</h2>
+<ul>
+<li><p>Multer 中间件只能处 multipart/form-data 编码的请求</p>
+<p>HTML 表单 enctype 属性共有三种：</p>
+<ul>
+<li><code>application/x-www-form-urlencoded</code>：初始的默认值</li>
+<li><code>multipart/form-data</code>：适用于使用
+<code>&lt;input&gt;</code> 标签上传文件</li>
+<li><code>text/plain</code>：HTML5 引入的类型</li>
+</ul></li>
+<li><p>express-validator 中间件无法处理 multi/form-data
+编码的请求，如果仍然需要对输入进行检查，Multer 仍然会将表单的 JSON
+数据放到 <code>req.body</code> 中，之后可以使用 validator 库对
+<code>req.body</code> 中的数据进行检查</p>
+<p>如在 Getting Start 中的例子修改上传文件如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">app.post(<span class="string">&quot;/upload&quot;</span>, upload.any(), <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.files[<span class="number">0</span>]);</span><br><span class="line">  <span class="built_in">console</span>.log(req.body);</span><br><span class="line">  res.send(&#123; <span class="attr">msg</span>: <span class="string">&quot;Successfully&quot;</span> &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+<p>修改 HTML 文件如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- index.html --&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/upload&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;e-mail&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;upload&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>运行后提交表单 <code>console.log(req.body)</code> 将会打印：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">e-mail:&#x27;<span class="number">123</span>@mail.com&#x27;</span><br><span class="line">name:&#x27;Bob White&#x27;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="参考资料">参考资料</h4>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/expressjs/multer">expressjs/multer:
+Node.js middleware for handling multipart/form-data.
+(github.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md">multer/README-zh-cn.md
+at master · expressjs/multer (github.com)</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>自是水长东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2023/05/29/Multer/" title="Multer">http://example.com/2023/05/29/Multer/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/01/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#multer"><span class="nav-number">1.</span> <span class="nav-text">Multer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#getting-started"><span class="nav-number">1.1.</span> <span class="nav-text">Getting Started</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#api"><span class="nav-number">1.2.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#file-information"><span class="nav-number">1.2.1.</span> <span class="nav-text">File information</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multeropts"><span class="nav-number">1.2.2.</span> <span class="nav-text">multer(opts)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#singlefieldname"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">.single(fieldname)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arrayfieldname-maxcount"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">.array(fieldname[, maxCount])</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fieldsfields"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">.fields(fields)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#none"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">.none()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#any"><span class="nav-number">1.2.2.5.</span> <span class="nav-text">.any()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#storage"><span class="nav-number">1.2.3.</span> <span class="nav-text">storage</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#diskstorage"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">DiskStorage</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#example"><span class="nav-number">1.2.3.1.1.</span> <span class="nav-text">Example</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#memorystorage"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">MemoryStorage</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#limits"><span class="nav-number">1.2.4.</span> <span class="nav-text">limits</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#filefilter"><span class="nav-number">1.2.5.</span> <span class="nav-text">fileFilter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#error-handling"><span class="nav-number">1.3.</span> <span class="nav-text">Error handling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#final-example"><span class="nav-number">1.4.</span> <span class="nav-text">Final Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#custom-storage-engine"><span class="nav-number">1.5.</span> <span class="nav-text">Custom storage engine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cautions"><span class="nav-number">1.6.</span> <span class="nav-text">Cautions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.6.0.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="自是水长东"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">自是水长东</p>
+  <div class="site-description" itemprop="description">Medicine, law, business, engineering: these are noble pursuits and necessary to sustain life. But poetry, beauty, romance, love... these are what we stay alive for.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=27483202&auto=1&height=66"></iframe>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<!-- 访客数和访问量的设置 -->
+<div class="busuanzi-count">
+  <script async="" src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js";></script>
+
+  <span class="site-uv">
+  <i class="fa fa-user"> 本站访客数</i>
+  <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  人
+  </span>
+
+  <span class="site-pv">
+  <i class="fa fa-eye"> 本站总访问量</i>
+  <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  次
+  </span>
+
+</div>
+
+ <!-- 网站运行时间的设置 -->
+    <span id="timeDate">载入天数...</span>
+    <span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insane move.
+    <script>
+        var now = new Date();
+        function createtime() {
+            var grt= new Date("09/01/2021 00:00:00");//此处修改你的建站时间或者网站上线时间
+            now.setTime(now.getTime()+250);
+            days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+            hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+            if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+            mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+            seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+            snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+            document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+            document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+    </script><script color="255,105,180" 
+ opacity="0.5" 
+ zIndex="-1" 
+ count="150" 
+ src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js">
+ </script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
