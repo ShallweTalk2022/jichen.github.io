@@ -233,7 +233,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-05-30 14:30:04" itemprop="dateModified" datetime="2023-05-30T14:30:04+08:00">2023-05-30</time>
+                <time title="修改时间：2023-05-30 14:55:07" itemprop="dateModified" datetime="2023-05-30T14:55:07+08:00">2023-05-30</time>
               </span>
 
           
@@ -421,11 +421,11 @@ uploaded. The array of files will be stored in
 <p>HTML 文件：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- index.html --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/upload&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;upload&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- ... --&gt;</span></span><br></pre></td></tr></table></figure>
 <p>若此时上传两个文件：</p>
-<p><img src="/.com//Blog\myblog\source\_posts\Multer\image-20230503100109821.png" alt="image-20230503100109821" style="zoom:80%;"></p>
+<p><img src="/.com//Multer\image-20230503100109821.png" alt="image-20230503100109821" style="zoom:80%;"></p>
 <p>会发生错误：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MulterError: Unexpected field</span><br></pre></td></tr></table></figure>
 <p>若只上传一个文件，或将 <code>maxCount</code> 属性修改为 <span class="math inline">\(2\)</span>，就可以成功上传：</p>
-<p><img src="/.com//Blog\myblog\source\_posts\Multer\image-20230503100233237.png" alt="image-20230503100233237" style="zoom:80%;"></p>
+<p><img src="/.com//Multer\image-20230503100233237.png" alt="image-20230503100233237" style="zoom:80%;"></p>
 <h4 id="fieldsfields">.fields(fields)</h4>
 <p>Accept a mix of files, specified by <code>fields</code>. An object
 with arrays of files will be stored in <code>req.files</code>.</p>
